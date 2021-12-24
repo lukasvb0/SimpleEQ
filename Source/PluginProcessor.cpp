@@ -166,7 +166,8 @@ bool SimpleEQAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* SimpleEQAudioProcessor::createEditor()
 {
-    return new SimpleEQAudioProcessorEditor (*this);
+    //return new SimpleEQAudioProcessorEditor (*this);
+    return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
@@ -189,9 +190,9 @@ SimpleEQAudioProcessor::createParameterLayout()
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        "lowCut Freq", 
-        "lowCut Freq", 
-        juce::NormalisableRange<float>(20.f, 20000.f, 1.f, 1.f), 
+        "lowCut Freq",
+        "lowCut Freq",
+        juce::NormalisableRange<float>(20.f, 20000.f, 1.f, 1.f),
         20.f));
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
@@ -210,7 +211,7 @@ SimpleEQAudioProcessor::createParameterLayout()
         "Peak Gain",
         "Peak Gain",
         juce::NormalisableRange<float>(-24.f, 24.f, 0.5f, 1.f),
-       0.0f));
+        0.0f));
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         "Peak Quality",
@@ -221,11 +222,18 @@ SimpleEQAudioProcessor::createParameterLayout()
     juce::StringArray stringArray;
     for (int i = 0; i < 4; ++i)
     {
+        juce::String str;
+        str << (12 + i * 12);
+        str << "db/Oct";
+        stringArray.add(str);
 
     }
 
-    return layout;
+    layout.add(std::make_unique < juce::AudioParameterChoice>("LowCut Slope", "LowCut Slope", stringArray, 0));
+    layout.add(std::make_unique < juce::AudioParameterChoice>("HighCut Slope", "HighCut Slope", stringArray, 0));
 
+
+    return layout;
 }
 
 //==============================================================================
